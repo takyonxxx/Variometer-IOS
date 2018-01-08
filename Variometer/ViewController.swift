@@ -183,8 +183,8 @@ class ViewController: UIViewController ,MKMapViewDelegate, CLLocationManagerDele
             let polyline = MKPolyline(coordinates: &a, count: a.count)
             self.mapView.add(polyline)
         }
-       
-        ZoomToCoordinateAndCenter(coordinate: location.coordinate, meters: 1000, animate: true);
+        
+        ZoomToCoordinateAndCenter(coordinate: location.coordinate, meters: 2000, animate: true);
         
         if(location.speed >= 0 && location.altitude >= 0)
         {
