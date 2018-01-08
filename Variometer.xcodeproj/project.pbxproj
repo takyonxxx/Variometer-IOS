@@ -1,0 +1,343 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 48;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		2D6193A22003AAE200FCB9C0 /* TestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D6193A12003AAE200FCB9C0 /* TestViewController.swift */; };
+		2DAC28DE1FDEA3990017C4C2 /* KalmanFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DAC28DD1FDEA3990017C4C2 /* KalmanFilter.swift */; };
+		2DFACF3C1FF63FEE0044BFA4 /* AVTonePlayerUnit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DFACF3B1FF63FEE0044BFA4 /* AVTonePlayerUnit.swift */; };
+		2DFACF3E1FF642AC0044BFA4 /* PiecewiseLinearFunction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DFACF3D1FF642AC0044BFA4 /* PiecewiseLinearFunction.swift */; };
+		2DFDBE3D1FDE925400EF5800 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DFDBE3C1FDE925400EF5800 /* AppDelegate.swift */; };
+		2DFDBE3F1FDE925400EF5800 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DFDBE3E1FDE925400EF5800 /* ViewController.swift */; };
+		2DFDBE421FDE925400EF5800 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2DFDBE401FDE925400EF5800 /* Main.storyboard */; };
+		2DFDBE441FDE925400EF5800 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2DFDBE431FDE925400EF5800 /* Assets.xcassets */; };
+		2DFDBE471FDE925400EF5800 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2DFDBE451FDE925400EF5800 /* LaunchScreen.storyboard */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		2D6193A12003AAE200FCB9C0 /* TestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestViewController.swift; sourceTree = "<group>"; };
+		2DAC28DD1FDEA3990017C4C2 /* KalmanFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KalmanFilter.swift; sourceTree = "<group>"; };
+		2DFACF3B1FF63FEE0044BFA4 /* AVTonePlayerUnit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AVTonePlayerUnit.swift; sourceTree = "<group>"; };
+		2DFACF3D1FF642AC0044BFA4 /* PiecewiseLinearFunction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PiecewiseLinearFunction.swift; sourceTree = "<group>"; };
+		2DFDBE391FDE925400EF5800 /* Variometer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Variometer.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		2DFDBE3C1FDE925400EF5800 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		2DFDBE3E1FDE925400EF5800 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		2DFDBE411FDE925400EF5800 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		2DFDBE431FDE925400EF5800 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		2DFDBE461FDE925400EF5800 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		2DFDBE481FDE925400EF5800 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		2DFDBE361FDE925400EF5800 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		2DFDBE301FDE925400EF5800 = {
+			isa = PBXGroup;
+			children = (
+				2DFDBE3B1FDE925400EF5800 /* Variometer */,
+				2DFDBE3A1FDE925400EF5800 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		2DFDBE3A1FDE925400EF5800 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				2DFDBE391FDE925400EF5800 /* Variometer.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		2DFDBE3B1FDE925400EF5800 /* Variometer */ = {
+			isa = PBXGroup;
+			children = (
+				2DFDBE3C1FDE925400EF5800 /* AppDelegate.swift */,
+				2DFDBE3E1FDE925400EF5800 /* ViewController.swift */,
+				2DFDBE401FDE925400EF5800 /* Main.storyboard */,
+				2DFDBE431FDE925400EF5800 /* Assets.xcassets */,
+				2DFDBE451FDE925400EF5800 /* LaunchScreen.storyboard */,
+				2DFDBE481FDE925400EF5800 /* Info.plist */,
+				2DFACF3B1FF63FEE0044BFA4 /* AVTonePlayerUnit.swift */,
+				2DAC28DD1FDEA3990017C4C2 /* KalmanFilter.swift */,
+				2DFACF3D1FF642AC0044BFA4 /* PiecewiseLinearFunction.swift */,
+				2D6193A12003AAE200FCB9C0 /* TestViewController.swift */,
+			);
+			path = Variometer;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		2DFDBE381FDE925400EF5800 /* Variometer */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2DFDBE4B1FDE925400EF5800 /* Build configuration list for PBXNativeTarget "Variometer" */;
+			buildPhases = (
+				2DFDBE351FDE925400EF5800 /* Sources */,
+				2DFDBE361FDE925400EF5800 /* Frameworks */,
+				2DFDBE371FDE925400EF5800 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Variometer;
+			productName = Variometer;
+			productReference = 2DFDBE391FDE925400EF5800 /* Variometer.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		2DFDBE311FDE925400EF5800 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 0920;
+				LastUpgradeCheck = 0920;
+				ORGANIZATIONNAME = "Türkay Biliyor";
+				TargetAttributes = {
+					2DFDBE381FDE925400EF5800 = {
+						CreatedOnToolsVersion = 9.2;
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 2DFDBE341FDE925400EF5800 /* Build configuration list for PBXProject "Variometer" */;
+			compatibilityVersion = "Xcode 8.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 2DFDBE301FDE925400EF5800;
+			productRefGroup = 2DFDBE3A1FDE925400EF5800 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				2DFDBE381FDE925400EF5800 /* Variometer */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		2DFDBE371FDE925400EF5800 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2DFDBE471FDE925400EF5800 /* LaunchScreen.storyboard in Resources */,
+				2DFDBE441FDE925400EF5800 /* Assets.xcassets in Resources */,
+				2DFDBE421FDE925400EF5800 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		2DFDBE351FDE925400EF5800 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2DAC28DE1FDEA3990017C4C2 /* KalmanFilter.swift in Sources */,
+				2DFDBE3F1FDE925400EF5800 /* ViewController.swift in Sources */,
+				2DFDBE3D1FDE925400EF5800 /* AppDelegate.swift in Sources */,
+				2DFACF3C1FF63FEE0044BFA4 /* AVTonePlayerUnit.swift in Sources */,
+				2D6193A22003AAE200FCB9C0 /* TestViewController.swift in Sources */,
+				2DFACF3E1FF642AC0044BFA4 /* PiecewiseLinearFunction.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		2DFDBE401FDE925400EF5800 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				2DFDBE411FDE925400EF5800 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		2DFDBE451FDE925400EF5800 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				2DFDBE461FDE925400EF5800 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		2DFDBE491FDE925400EF5800 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		2DFDBE4A1FDE925400EF5800 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		2DFDBE4C1FDE925400EF5800 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = X26P47BR28;
+				INFOPLIST_FILE = Variometer/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.biliyor.Variometer;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		2DFDBE4D1FDE925400EF5800 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = X26P47BR28;
+				INFOPLIST_FILE = Variometer/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.biliyor.Variometer;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		2DFDBE341FDE925400EF5800 /* Build configuration list for PBXProject "Variometer" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2DFDBE491FDE925400EF5800 /* Debug */,
+				2DFDBE4A1FDE925400EF5800 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2DFDBE4B1FDE925400EF5800 /* Build configuration list for PBXNativeTarget "Variometer" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2DFDBE4C1FDE925400EF5800 /* Debug */,
+				2DFDBE4D1FDE925400EF5800 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 2DFDBE311FDE925400EF5800 /* Project object */;
+}
