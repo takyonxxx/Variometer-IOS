@@ -8,97 +8,66 @@
 
 import Foundation
 
-extension Double: KalmanInput {
-    public var transposed: Double {
-        return self
+class KalmanFilter
+{
+    var var_x_accel_ : Double = 0.0
+    var x_abs_ : Double = 0.0
+    var x_vel_ : Double = 0.0
+    var p_abs_abs_ : Double = 0.0
+    var p_abs_vel_ : Double = 0.0
+    var p_vel_vel_ : Double = 0.0
+    
+    func start(x_accel : Double) {
+        var_x_accel_ = x_accel
+        Reset(x_abs_value: 0.0, x_vel_value: 0.0)
     }
     
-    public var inversed: Double {
-        return 1 / self
+    func Reset(x_abs_value: Double, x_vel_value: Double)
+    {
+        x_abs_ = x_abs_value;
+        x_vel_ = x_vel_value;
+        p_abs_abs_ = 1e6;
+        p_abs_vel_ = 0;
+        p_vel_vel_ = var_x_accel_;
     }
     
-    public var additionToUnit: Double {
-        return 1 - self
-    }
-}
-public protocol KalmanInput {
-    var transposed: Self { get }
-    var inversed: Self { get }
-    var additionToUnit: Self { get }
-    
-    static func + (lhs: Self, rhs: Self) -> Self
-    static func - (lhs: Self, rhs: Self) -> Self
-    static func * (lhs: Self, rhs: Self) -> Self
-}
-
-public protocol KalmanFilterType {
-    associatedtype Input: KalmanInput
-    
-    var stateEstimatePrior: Input { get }
-    var errorCovariancePrior: Input { get }
-    
-    func predict(stateTransitionModel: Input, controlInputModel: Input, controlVector: Input, covarianceOfProcessNoise: Input) -> Self
-    func update(measurement: Input, observationModel: Input, covarienceOfObservationNoise: Input) -> Self
-}
-
-/**
- Conventional Kalman Filter
- */
-public struct KalmanFilter<Type: KalmanInput>: KalmanFilterType {
-    /// x̂_k|k-1
-    public let stateEstimatePrior: Type
-    /// P_k|k-1
-    public let errorCovariancePrior: Type
-    
-    public init(stateEstimatePrior: Type, errorCovariancePrior: Type) {
-        self.stateEstimatePrior = stateEstimatePrior
-        self.errorCovariancePrior = errorCovariancePrior
-    }
-    
-    /**
-     Predict step in Kalman filter.
-     
-     - parameter stateTransitionModel: F_k
-     - parameter controlInputModel: B_k
-     - parameter controlVector: u_k
-     - parameter covarianceOfProcessNoise: Q_k
-     
-     - returns: Another instance of Kalman filter with predicted x̂_k and P_k
-     */
-    public func predict(stateTransitionModel: Type, controlInputModel: Type, controlVector: Type, covarianceOfProcessNoise: Type) -> KalmanFilter {
-        // x̂_k|k-1 = F_k * x̂_k-1|k-1 + B_k * u_k
-        let predictedStateEstimate = stateTransitionModel * stateEstimatePrior + controlInputModel * controlVector
-        // P_k|k-1 = F_k * P_k-1|k-1 * F_k^t + Q_k
-        let predictedEstimateCovariance = stateTransitionModel * errorCovariancePrior * stateTransitionModel.transposed + covarianceOfProcessNoise
+    func Update(z_abs : Double, var_z_abs : Double, dt: Double)
+    {
+        let F1 : Double = 1.0
         
-        return KalmanFilter(stateEstimatePrior: predictedStateEstimate, errorCovariancePrior: predictedEstimateCovariance)
+        // Validity checks. TODO: more?
+        assert(dt > 0);
+        
+        // Note: math is not optimized by hand. Let the compiler sort it out.
+        // Predict step.
+        // Update state estimate.
+        x_abs_ += x_vel_ * dt;
+        // Update state covariance. The last term mixes in acceleration noise.
+        let dt2 = pow(dt,dt);
+        let dt3 = dt * dt2;
+        let dt4 = pow(dt2,dt2);
+        p_abs_abs_ += 2 * dt * p_abs_vel_ + dt2 * p_vel_vel_ + var_x_accel_ * dt4 / 4;
+        p_abs_vel_ += dt * p_vel_vel_ + var_x_accel_ * dt3 / 2;
+        p_vel_vel_ += var_x_accel_ * dt2;
+        
+        // Update step.
+        let y = z_abs - x_abs_;  // Innovation.
+        let s_inv = F1 / (p_abs_abs_ + var_z_abs);  // Innovation precision.
+        let k_abs = p_abs_abs_*s_inv;  // Kalman gain
+        let k_vel = p_abs_vel_*s_inv;
+        // Update state estimate.
+        x_abs_ += k_abs * y;
+        x_vel_ += k_vel * y;
+        // Update state covariance.
+        p_vel_vel_ -= p_abs_vel_*k_vel;
+        p_abs_vel_ -= p_abs_vel_*k_abs;
+        p_abs_abs_ -= p_abs_abs_*k_abs;
+        
     }
     
-    /**
-     Update step in Kalman filter. We update our prediction with the measurements that we make
-     
-     - parameter measurement: z_k
-     - parameter observationModel: H_k
-     - parameter covarienceOfObservationNoise: R_k
-     
-     - returns: Updated with the measurements version of Kalman filter with new x̂_k and P_k
-     */
-    public func update(measurement: Type, observationModel: Type, covarienceOfObservationNoise: Type) -> KalmanFilter {
-        // H_k^t transposed. We cache it improve performance
-        let observationModelTransposed = observationModel.transposed
-        
-        // ỹ_k = z_k - H_k * x̂_k|k-1
-        let measurementResidual = measurement - observationModel * stateEstimatePrior
-        // S_k = H_k * P_k|k-1 * H_k^t + R_k
-        let residualCovariance = observationModel * errorCovariancePrior * observationModelTransposed + covarienceOfObservationNoise
-        // K_k = P_k|k-1 * H_k^t * S_k^-1
-        let kalmanGain = errorCovariancePrior * observationModelTransposed * residualCovariance.inversed
-        
-        // x̂_k|k = x̂_k|k-1 + K_k * ỹ_k
-        let posterioriStateEstimate = stateEstimatePrior + kalmanGain * measurementResidual
-        // P_k|k = (I - K_k * H_k) * P_k|k-1
-        let posterioriEstimateCovariance = (kalmanGain * observationModel).additionToUnit * errorCovariancePrior
-        
-        return KalmanFilter(stateEstimatePrior: posterioriStateEstimate, errorCovariancePrior: posterioriEstimateCovariance)
-    }
+    func GetXAbs() -> Double { return x_abs_; }
+    func GetXVel() -> Double { return x_vel_; }
+    func GetCovAbsAbs() -> Double { return p_abs_abs_; }
+    func GetCovAbsVel() -> Double { return p_abs_vel_; }
+    func GetCovVelVel() -> Double { return p_vel_vel_; }
 }

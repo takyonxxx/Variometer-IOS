@@ -38,6 +38,9 @@ class ViewController: UIViewController ,MKMapViewDelegate, CLLocationManagerDele
     var toneFrequency: Double = 700.0
     var myLocations: [CLLocation] = []
     
+    var KF_VAR_ACCEL : Double = 0.0075
+    var KF_VAR_MEASUREMENT : Double = 0.05
+    
     var engine: AVAudioEngine!
     var tone: AVTonePlayerUnit!
     
@@ -54,8 +57,7 @@ class ViewController: UIViewController ,MKMapViewDelegate, CLLocationManagerDele
     
     lazy var altimeter = CMAltimeter() // Lazily load CMAltimeter
     var timer = Timer()
-    var kalmanFilter = KalmanFilter(stateEstimatePrior:0.0, errorCovariancePrior: 1)
-    var testFilter = KalmanFilter(stateEstimatePrior: 0.0, errorCovariancePrior: 1)
+    var kalmanFilter = KalmanFilter()
     var varioDelay = PieceviseLinearFunction()
     var varioTone = PieceviseLinearFunction()
     
@@ -85,6 +87,8 @@ class ViewController: UIViewController ,MKMapViewDelegate, CLLocationManagerDele
         varioTone.addNewPoint(newPoint: xyPoint(x: 4.0, y: toneFrequency + 600))
         varioTone.addNewPoint(newPoint: xyPoint(x: 4.5, y: toneFrequency + 700))
         varioTone.addNewPoint(newPoint: xyPoint(x: 6.0, y: toneFrequency + 800))
+        
+        kalmanFilter.start(x_accel: KF_VAR_ACCEL)
         
         startTone()
         startAltimeter()
@@ -158,7 +162,6 @@ class ViewController: UIViewController ,MKMapViewDelegate, CLLocationManagerDele
     
     func ZoomToCoordinateAndCenter (coordinate: CLLocationCoordinate2D , meters: Double , animate: Bool)
     {
-        mapView.setCenter(coordinate , animated: animate)
         let lastRegion = MKCoordinateRegionMakeWithDistance(coordinate, meters, meters)
         mapView.setRegion(lastRegion, animated: animate)
     }
@@ -184,17 +187,25 @@ class ViewController: UIViewController ,MKMapViewDelegate, CLLocationManagerDele
             self.mapView.add(polyline)
         }
         
-        ZoomToCoordinateAndCenter(coordinate: location.coordinate, meters: 2000, animate: true);
-        
         if(location.speed >= 0 && location.altitude >= 0)
         {
             self.speedLabel.text = String(format: "%.0f km/h", location.speed * 3.6)
             self.altLabel.text =  String(format: "%.01f m", location.altitude)
-            self.mapView.camera.heading = location.course
-            self.mapView.setCamera(mapView.camera, animated: true)
+            //self.mapView.camera.heading = location.course
+            //self.mapView.setCamera(mapView.camera, animated: true)
         }
+        
+        self.mapView.userTrackingMode = .followWithHeading
+        
     }
-   
+    
+    func getRadius(centralLocation: CLLocation) -> Double{
+        let topCentralLat:Double = centralLocation.coordinate.latitude -  mapView.region.span.latitudeDelta/2
+        let topCentralLocation = CLLocation(latitude: topCentralLat, longitude: centralLocation.coordinate.longitude)
+        let radius = centralLocation.distance(from: topCentralLocation)
+        return radius
+    }
+    
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error)
     {
         print("Error \(error)")
@@ -204,7 +215,7 @@ class ViewController: UIViewController ,MKMapViewDelegate, CLLocationManagerDele
         assert(overlay is MKPolyline, "overlay must be polyline")
         
         let polylineRenderer = MKPolylineRenderer(overlay: overlay)
-        polylineRenderer.strokeColor = UIColor.blue
+        polylineRenderer.strokeColor = UIColor.yellow
         polylineRenderer.lineWidth = 4
         return polylineRenderer
     }
@@ -310,11 +321,6 @@ class ViewController: UIViewController ,MKMapViewDelegate, CLLocationManagerDele
     
     func calculateVario() {
         
-        //it seems pressure values already filtered by ios so not neccassary to use kalman filter.
-        /*self.testFilter = self.testFilter.update(measurement: Double(self.rAltitude - oldaltitude), observationModel: 1, covarienceOfObservationNoise: 0.01)
-        self.testFilter = self.testFilter.predict(stateTransitionModel: 1, controlInputModel: 0, controlVector: 0, covarianceOfProcessNoise: 0)
-        self.vario = testFilter.stateEstimatePrior*/
-        
         if(self.oldaltitude == 0.0) {
             self.oldaltitude = self.rAltitude
         }
@@ -325,9 +331,11 @@ class ViewController: UIViewController ,MKMapViewDelegate, CLLocationManagerDele
             let nanoTime = self.end.uptimeNanoseconds - self.start.uptimeNanoseconds // <<<<< Difference in nano seconds (UInt64)
             let diff = Double(nanoTime) / 1_000_000_000
             
-            self.vario = Double((self.rAltitude - oldaltitude) / diff)
+            kalmanFilter.Update(z_abs: self.rAltitude, var_z_abs: KF_VAR_MEASUREMENT, dt: diff)
+            
+            self.vario = Double(kalmanFilter.GetXVel())
             self.variometerLable.text = String(format: "%.1f m/sn", self.vario)
-            oldaltitude = self.rAltitude
+            print(String(format: "GetXAbs %.1f GetXVel %.1f", kalmanFilter.GetXAbs(),kalmanFilter.GetXVel()))
             
             self.start = self.end
         }
