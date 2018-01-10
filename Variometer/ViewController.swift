@@ -40,6 +40,7 @@ class ViewController: UIViewController ,MKMapViewDelegate, CLLocationManagerDele
     
     var KF_VAR_ACCEL : Double = 0.0075
     var KF_VAR_MEASUREMENT : Double = 0.05
+    var KalmanEnable : Bool =  true
     
     var engine: AVAudioEngine!
     var tone: AVTonePlayerUnit!
@@ -331,12 +332,19 @@ class ViewController: UIViewController ,MKMapViewDelegate, CLLocationManagerDele
             let nanoTime = self.end.uptimeNanoseconds - self.start.uptimeNanoseconds // <<<<< Difference in nano seconds (UInt64)
             let diff = Double(nanoTime) / 1_000_000_000
             
-            kalmanFilter.Update(z_abs: self.rAltitude, var_z_abs: KF_VAR_MEASUREMENT, dt: diff)
+            if(self.KalmanEnable)
+            {
+                self.kalmanFilter.Update(z_abs: self.rAltitude, var_z_abs: KF_VAR_MEASUREMENT, dt: diff)
+                self.vario = Double(kalmanFilter.GetXVel())
+                //print(String(format: "GetXAbs %.1f GetXVel %.1f", kalmanFilter.GetXAbs(),kalmanFilter.GetXVel()))
+            }
+            else
+            {
+                self.vario = Double((self.rAltitude - self.oldaltitude) / diff)
+                self.oldaltitude = self.rAltitude
+            }
             
-            self.vario = Double(kalmanFilter.GetXVel())
             self.variometerLable.text = String(format: "%.1f m/sn", self.vario)
-            print(String(format: "GetXAbs %.1f GetXVel %.1f", kalmanFilter.GetXAbs(),kalmanFilter.GetXVel()))
-            
             self.start = self.end
         }
        

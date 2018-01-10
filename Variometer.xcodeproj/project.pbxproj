@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2D6193A22003AAE200FCB9C0 /* TestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D6193A12003AAE200FCB9C0 /* TestViewController.swift */; };
 		2DAC28DE1FDEA3990017C4C2 /* KalmanFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DAC28DD1FDEA3990017C4C2 /* KalmanFilter.swift */; };
 		2DFACF3C1FF63FEE0044BFA4 /* AVTonePlayerUnit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DFACF3B1FF63FEE0044BFA4 /* AVTonePlayerUnit.swift */; };
 		2DFACF3E1FF642AC0044BFA4 /* PiecewiseLinearFunction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DFACF3D1FF642AC0044BFA4 /* PiecewiseLinearFunction.swift */; };
@@ -19,7 +18,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		2D6193A12003AAE200FCB9C0 /* TestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestViewController.swift; sourceTree = "<group>"; };
 		2DAC28DD1FDEA3990017C4C2 /* KalmanFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KalmanFilter.swift; sourceTree = "<group>"; };
 		2DFACF3B1FF63FEE0044BFA4 /* AVTonePlayerUnit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AVTonePlayerUnit.swift; sourceTree = "<group>"; };
 		2DFACF3D1FF642AC0044BFA4 /* PiecewiseLinearFunction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PiecewiseLinearFunction.swift; sourceTree = "<group>"; };
@@ -71,7 +69,6 @@
 				2DFACF3B1FF63FEE0044BFA4 /* AVTonePlayerUnit.swift */,
 				2DAC28DD1FDEA3990017C4C2 /* KalmanFilter.swift */,
 				2DFACF3D1FF642AC0044BFA4 /* PiecewiseLinearFunction.swift */,
-				2D6193A12003AAE200FCB9C0 /* TestViewController.swift */,
 			);
 			path = Variometer;
 			sourceTree = "<group>";
@@ -152,7 +149,6 @@
 				2DFDBE3F1FDE925400EF5800 /* ViewController.swift in Sources */,
 				2DFDBE3D1FDE925400EF5800 /* AppDelegate.swift in Sources */,
 				2DFACF3C1FF63FEE0044BFA4 /* AVTonePlayerUnit.swift in Sources */,
-				2D6193A22003AAE200FCB9C0 /* TestViewController.swift in Sources */,
 				2DFACF3E1FF642AC0044BFA4 /* PiecewiseLinearFunction.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
