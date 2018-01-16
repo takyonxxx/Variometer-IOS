@@ -311,10 +311,10 @@ class ViewController: UIViewController ,MKMapViewDelegate, CLLocationManagerDele
         tone.frequency = Double(varioTone.getValue(x: self.vario))
         
         tone.play()
-        //engine.mainMixerNode.volume = 1.0
+        engine.mainMixerNode.volume = 1.0
         usleep(useconds_t(1000 * 1000 * microSeconds))
         
-        //engine.mainMixerNode.volume = 0.0
+        engine.mainMixerNode.volume = 0.0
         tone.stop()
         usleep(useconds_t( 1000 * 1000 * microSeconds))
         
