@@ -73,7 +73,7 @@ class AudioGenerator {
         NSLog("Audio engine configuration change: \(notification)")
     }
     
-    class func sharedSynth() -> AudioGenerator {
+    class func sharedAudio() -> AudioGenerator {
         return gAudioGenerator
     }
 

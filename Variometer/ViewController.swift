@@ -265,7 +265,7 @@ class ViewController: UIViewController ,MKMapViewDelegate, CLLocationManagerDele
     }
     
     func stopAltimeter() {
-        AudioGenerator.sharedSynth().engineStop()
+        AudioGenerator.sharedAudio().engineStop()
         self.altLabel.text = "-"
         self.altimeter.stopRelativeAltitudeUpdates() // Stop updates
         print("Variometer Stopped.")
@@ -286,9 +286,9 @@ class ViewController: UIViewController ,MKMapViewDelegate, CLLocationManagerDele
             }
             let seconds = self?.varioDelay.getValue(x: (self?.vario)!)
             let frequency:Float32 = Float32(self!.varioTone.getValue(x: self!.vario))
-            AudioGenerator.sharedSynth().play(carrierFrequency: frequency);
+            AudioGenerator.sharedAudio().play(carrierFrequency: frequency);
             usleep(useconds_t( 1000 * 1000 * seconds!))
-            AudioGenerator.sharedSynth().stop()
+            AudioGenerator.sharedAudio().stop()
             usleep(useconds_t( 1000 * 1000 * seconds! ))
         }
         timer?.resume()
@@ -297,7 +297,7 @@ class ViewController: UIViewController ,MKMapViewDelegate, CLLocationManagerDele
     private func stopBeep() {
         timer?.cancel()
         timer = nil
-        AudioGenerator.sharedSynth().engineStop()
+        AudioGenerator.sharedAudio().engineStop()
     }
     
     func calculateVario() {
