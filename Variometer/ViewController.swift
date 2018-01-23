@@ -21,6 +21,7 @@ extension Double {
         return Double(arc4random()) / arc4randomMax
     }
 }
+
 enum MapType: NSInteger {
     case StandardMap = 0
     case SatelliteMap = 1
@@ -42,13 +43,9 @@ class ViewController: UIViewController ,MKMapViewDelegate, CLLocationManagerDele
     var KF_VAR_MEASUREMENT : Double = 0.05
     var KalmanEnable : Bool =  true
     
-    var engine: AVAudioEngine!
-    var tone: AVTonePlayerUnit!
-    
     var start: DispatchTime = DispatchTime.now()
     var end: DispatchTime = DispatchTime.now()
   
-    @IBOutlet weak var testButton: UIButton!
     @IBOutlet weak var speedLabel: UILabel!
     @IBOutlet weak var altLabel: UILabel!
     @IBOutlet weak var variometerLable: UILabel! // Vario Label
@@ -57,10 +54,11 @@ class ViewController: UIViewController ,MKMapViewDelegate, CLLocationManagerDele
     private var currentLocation: CLLocation?
     
     lazy var altimeter = CMAltimeter() // Lazily load CMAltimeter
-    var timer = Timer()
     var kalmanFilter = KalmanFilter()
     var varioDelay = PieceviseLinearFunction()
     var varioTone = PieceviseLinearFunction()
+    
+    var timer: DispatchSourceTimer?
     
     //fix orientation to portrait
     private var orientations = UIInterfaceOrientationMask.portrait
@@ -91,46 +89,18 @@ class ViewController: UIViewController ,MKMapViewDelegate, CLLocationManagerDele
         
         kalmanFilter.start(x_accel: KF_VAR_ACCEL)
         
-        startTone()
         startAltimeter()
-        startGpsMap();
+        startGpsMap()
+        startBeep()
         
-        self.timer.invalidate()
-        self.timer = Timer.scheduledTimer(timeInterval: 0.0, target: self, selector: #selector(self.timerAction), userInfo: nil, repeats: true)
-        UIApplication.shared.isIdleTimerDisabled = true
-     
         // Do any additional setup after loading the view, typically from a nib.
     }
     
-    @IBAction func testPressed(_ sender: Any) {
-    }
-    
     @IBAction func exitPressed(_ sender: Any) {
-        
-        if tone.isPlaying {
-            engine.mainMixerNode.volume = 0.0
-            tone.stop()
-        }
+        stopBeep()
         stopAltimeter()
         stopGpsMap()
         exit(0);
-    }
-    
-    /////Tone generator/////
-    func startTone() {
-        tone = AVTonePlayerUnit()
-        let format = AVAudioFormat(standardFormatWithSampleRate: tone.sampleRate, channels: 1)
-        engine = AVAudioEngine()
-        engine.attach(tone)
-        let mixer = engine.mainMixerNode
-        engine.connect(tone, to: mixer, format: format)
-        do {
-            try engine.start()
-        } catch let error as NSError {
-            print(error)
-        }
-        
-        tone.preparePlaying()
     }
     
     /////gps/////
@@ -216,8 +186,8 @@ class ViewController: UIViewController ,MKMapViewDelegate, CLLocationManagerDele
         assert(overlay is MKPolyline, "overlay must be polyline")
         
         let polylineRenderer = MKPolylineRenderer(overlay: overlay)
-        polylineRenderer.strokeColor = UIColor.yellow
-        polylineRenderer.lineWidth = 4
+        polylineRenderer.strokeColor = UIColor.blue
+        polylineRenderer.lineWidth = 3
         return polylineRenderer
     }
     
@@ -295,29 +265,38 @@ class ViewController: UIViewController ,MKMapViewDelegate, CLLocationManagerDele
     }
     
     func stopAltimeter() {
-        //timer.invalidate()
+        AudioGenerator.sharedSynth().engineStop()
         self.altLabel.text = "-"
         self.altimeter.stopRelativeAltitudeUpdates() // Stop updates
         print("Variometer Stopped.")
     }
     
-    @objc func timerAction() {
+    func startBeep() {
         
-        if(self.vario < 0.2){
-            return
+        let queue = DispatchQueue(label: "timer", attributes: .concurrent)
+        timer?.cancel()        // cancel previous timer if any
+        timer = DispatchSource.makeTimerSource(queue: queue)
+        timer?.schedule(deadline: .now(), repeating: .seconds(0), leeway: .milliseconds(100))
+        
+        timer?.setEventHandler {
+            [weak self] in // `[weak self]` only needed if you reference `self` in this closure and you want to prevent strong reference cycle
+            
+            if((self?.vario)! < Double(0.2)){
+                return
+            }
+            let seconds = self?.varioDelay.getValue(x: (self?.vario)!)
+            let frequency:Float32 = Float32(self!.varioTone.getValue(x: self!.vario))
+            AudioGenerator.sharedSynth().play(carrierFrequency: frequency);
+            usleep(useconds_t( 1000 * 1000 * seconds!))
+            AudioGenerator.sharedSynth().stop()
+            usleep(useconds_t( 1000 * 1000 * seconds! ))
         }
-        
-        let microSeconds = varioDelay.getValue(x: self.vario)
-        tone.frequency = Double(varioTone.getValue(x: self.vario))
-        
-        tone.play()
-        engine.mainMixerNode.volume = 1.0
-        usleep(useconds_t(1000 * 1000 * microSeconds))
-        
-        engine.mainMixerNode.volume = 0.0
-        tone.stop()
-        usleep(useconds_t( 1000 * 1000 * microSeconds))
-        
+        timer?.resume()
+    }
+    
+    private func stopBeep() {
+        timer?.cancel()
+        timer = nil
     }
     
     func calculateVario() {
@@ -336,7 +315,7 @@ class ViewController: UIViewController ,MKMapViewDelegate, CLLocationManagerDele
             {
                 self.kalmanFilter.Update(z_abs: self.rAltitude, var_z_abs: KF_VAR_MEASUREMENT, dt: diff)
                 self.vario = Double(kalmanFilter.GetXVel())
-                //print(String(format: "GetXAbs %.1f GetXVel %.1f", kalmanFilter.GetXAbs(),kalmanFilter.GetXVel()))
+                print(String(format: "GetXAbs %.1f GetXVel %.1f", kalmanFilter.GetXAbs(),kalmanFilter.GetXVel()))
             }
             else
             {
