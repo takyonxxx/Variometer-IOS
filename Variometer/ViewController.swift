@@ -297,6 +297,7 @@ class ViewController: UIViewController ,MKMapViewDelegate, CLLocationManagerDele
     private func stopBeep() {
         timer?.cancel()
         timer = nil
+        AudioGenerator.sharedSynth().engineStop()
     }
     
     func calculateVario() {
