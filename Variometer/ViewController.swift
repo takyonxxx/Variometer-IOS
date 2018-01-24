@@ -38,7 +38,7 @@ class ViewController: UIViewController ,MKMapViewDelegate, CLLocationManagerDele
     var seaLevel: Double = 101325.0
     var toneFrequency: Double = 700.0
     var myLocations: [CLLocation] = []
-    
+     
     var KF_VAR_ACCEL : Double = 0.0075
     var KF_VAR_MEASUREMENT : Double = 0.05
     var KalmanEnable : Bool =  true
@@ -95,6 +95,11 @@ class ViewController: UIViewController ,MKMapViewDelegate, CLLocationManagerDele
         
         // Do any additional setup after loading the view, typically from a nib.
     }
+    
+    /*@IBAction func sliderVario(_ sender: UISlider) {
+        let currentValue = Double(sender.value)
+        self.vario = currentValue
+    }*/
     
     @IBAction func exitPressed(_ sender: Any) {
         stopBeep()
@@ -265,13 +270,15 @@ class ViewController: UIViewController ,MKMapViewDelegate, CLLocationManagerDele
     }
     
     func stopAltimeter() {
-        AudioGenerator.sharedAudio().engineStop()
+        
         self.altLabel.text = "-"
         self.altimeter.stopRelativeAltitudeUpdates() // Stop updates
         print("Variometer Stopped.")
     }
     
     func startBeep() {
+        
+        AudioGenerator.sharedAudio().Init()
         
         let queue = DispatchQueue(label: "timer", attributes: .concurrent)
         timer?.cancel()        // cancel previous timer if any
@@ -284,12 +291,15 @@ class ViewController: UIViewController ,MKMapViewDelegate, CLLocationManagerDele
             if((self?.vario)! < Double(0.2)){
                 return
             }
-            let seconds = self?.varioDelay.getValue(x: (self?.vario)!)
-            let frequency:Float32 = Float32(self!.varioTone.getValue(x: self!.vario))
-            AudioGenerator.sharedAudio().play(carrierFrequency: frequency);
-            usleep(useconds_t( 1000 * 1000 * seconds!))
+            let seconds:Double   = Double(self!.varioDelay.getValue(x: (self!.vario)))
+            let frequency:Double = Double(self!.varioTone.getValue(x: (self!.vario)))
+            
+            AudioGenerator.sharedAudio().setFrequency(newFreq: frequency)
+            AudioGenerator.sharedAudio().play()
+            usleep(useconds_t( 1000 * 1000 * seconds))
+            
             AudioGenerator.sharedAudio().stop()
-            usleep(useconds_t( 1000 * 1000 * seconds! ))
+            usleep(useconds_t( 1000 * 1000 * seconds ))
         }
         timer?.resume()
     }
@@ -297,7 +307,7 @@ class ViewController: UIViewController ,MKMapViewDelegate, CLLocationManagerDele
     private func stopBeep() {
         timer?.cancel()
         timer = nil
-        AudioGenerator.sharedAudio().engineStop()
+        AudioGenerator.sharedAudio().deInit()
     }
     
     func calculateVario() {
@@ -316,7 +326,7 @@ class ViewController: UIViewController ,MKMapViewDelegate, CLLocationManagerDele
             {
                 self.kalmanFilter.Update(z_abs: self.rAltitude, var_z_abs: KF_VAR_MEASUREMENT, dt: diff)
                 self.vario = Double(kalmanFilter.GetXVel())
-                print(String(format: "GetXAbs %.1f GetXVel %.1f", kalmanFilter.GetXAbs(),kalmanFilter.GetXVel()))
+                //print(String(format: "GetXAbs %.1f GetXVel %.1f", kalmanFilter.GetXAbs(),kalmanFilter.GetXVel()))
             }
             else
             {

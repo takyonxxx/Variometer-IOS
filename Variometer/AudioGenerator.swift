@@ -10,71 +10,98 @@ import Foundation
 import AVFoundation
 
 //instance
-let gAudioGenerator: AudioGenerator = AudioGenerator()
+let insAudioGenerator: AudioGenerator = AudioGenerator()
 
-class AudioGenerator {
+class AudioGenerator{
     
-    // store persistent objects
-    var audioEngine:AVAudioEngine
-    var player:AVAudioPlayerNode
-    var mixer:AVAudioMixerNode
-    var buffer:AVAudioPCMBuffer
+    var player: AVAudioPlayerNode!
+    var engine: AVAudioEngine!
+   
+    let bufferCapacity: AVAudioFrameCount = 8192
+    let sampleRate: Double = 8000.0
     
-    init(){
-        // initialize objects
-        audioEngine = AVAudioEngine()
+    var frequency: Double = 700.0
+    var amplitude: Double = 0.25
+    
+    private var theta: Double = 0.0
+    private var audioFormat: AVAudioFormat!
+    
+    func setFrequency(newFreq : Double){
+        frequency = newFreq
+    }
+    
+    func Init(){
+        
+        audioFormat = AVAudioFormat(standardFormatWithSampleRate: sampleRate, channels: 1)
         player = AVAudioPlayerNode()
-        mixer = audioEngine.mainMixerNode;
-        buffer = AVAudioPCMBuffer(pcmFormat: player.outputFormat(forBus: 0), frameCapacity: 100)!
-        buffer.frameLength = 100
+        engine = AVAudioEngine()
         
-        // setup audio engine
-        audioEngine.attach(player)
-        audioEngine.connect(player, to: mixer, format: player.outputFormat(forBus: 0))
+        engine.attach(player)
+        let mixer = engine.mainMixerNode
+        engine.connect(player, to: mixer, format: audioFormat)
         
-        do {
-            try audioEngine.start()
-        } catch {
-            print("AudioEngine didn't start")
+        if(!(engine.isRunning))
+        {
+            do {
+                try engine.start()
+            } catch let error as NSError {
+                print(error)
+            }
         }
     }
     
-    func play(carrierFrequency: Float32) {
+    func prepareBuffer() -> AVAudioPCMBuffer {
+        let buffer = AVAudioPCMBuffer(pcmFormat: audioFormat, frameCapacity: bufferCapacity)
+        fillBuffer(buffer!)
+        return buffer!
+    }
+    
+    func fillBuffer(_ buffer: AVAudioPCMBuffer) {
         
-        // generate sine wave
-        let sr:Float = Float(mixer.outputFormat(forBus: 0).sampleRate)
-        //let n_channels = mixer.outputFormat(forBus: 0).channelCount
+        let data = buffer.floatChannelData?[0]
+        let numberFrames = buffer.frameCapacity
+        var theta = self.theta
+        let theta_increment = 2.0 * .pi * self.frequency / self.sampleRate
         
-        for var sampleIndex in 0 ..< Int(buffer.frameLength) {
-            let val = sinf(carrierFrequency * Float(sampleIndex) * 2 * Float(Double.pi) / sr)
+        for frame in 0..<Int(numberFrames) {
+            data?[frame] = Float32(sin(theta) * amplitude)
             
-            buffer.floatChannelData?.pointee[sampleIndex] = val * 0.5
-            sampleIndex = sampleIndex + 1
+            theta += theta_increment
+            if theta > 2.0 * .pi {
+                theta -= 2.0 * .pi
+            }
         }
+        buffer.frameLength = numberFrames
+        self.theta = theta
+    }
+    
+    func play() {
         
-        // play player and buffer
+        let buffer = prepareBuffer()
+        if(player.isPlaying)
+        {
+            player.stop()
+        }
         player.play()
-        player.scheduleBuffer(buffer, at: nil, options: .loops, completionHandler: nil)
+        player.scheduleBuffer(buffer, at: nil,options: .loops, completionHandler: nil)
     }
     
     func stop() {
-        player.stop()
-        player.scheduleBuffer(buffer, at: nil, options: .loops, completionHandler: nil)
-    }
-    
-    func engineStop(){
         
-        if(audioEngine.isRunning){
-             audioEngine.stop()
+        if(player.isPlaying)
+        {
+            player.stop()
         }
     }
-   
-    @objc  func audioEngineConfigurationChange(_ notification: Notification) -> Void {
-        NSLog("Audio engine configuration change: \(notification)")
+    
+    func deInit() {
+        if(engine.isRunning)
+        {
+            engine.stop()
+        }
     }
     
     class func sharedAudio() -> AudioGenerator {
-        return gAudioGenerator
+        return insAudioGenerator
     }
-
 }
