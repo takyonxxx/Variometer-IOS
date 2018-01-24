@@ -21,7 +21,7 @@ class AudioGenerator{
     let sampleRate: Double = 8000.0
     
     var frequency: Double = 700.0
-    var amplitude: Double = 0.25
+    var amplitude: Double = 0.5
     
     private var theta: Double = 0.0
     private var audioFormat: AVAudioFormat!
